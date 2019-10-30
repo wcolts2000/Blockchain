@@ -5,6 +5,8 @@ from time import time
 import sys
 import json
 
+coins = 0
+
 
 def proof_of_work(block):
     """
@@ -21,7 +23,7 @@ def proof_of_work(block):
         proof += 1
     guess = f'{block_string}{proof}'.encode()
     guess_hash = hashlib.sha256(guess).hexdigest()
-    print(f'finished proof: {proof} at time: {time()}, {guess}')
+    print(f'finished proof: {proof} at time: {time()}, {guess_hash}')
     return proof
 
 
@@ -78,6 +80,16 @@ if __name__ == '__main__':
         data = r.json()
 
         # TODO: If the server responds with a 'message' 'New Block Forged'
+        
         # add 1 to the number of coins mined and print it.  Otherwise,
+        if 'message' in data:
+            if data['message'] == 'New Block Forged':
+                print(f'message: {data["message"]}')
+                coins += 1
+                print(f"Coins earned: {coins}")
+            else:
+                print(f"ERROR: {data['message']}")
+        else:
+            print(f"NOPE, {data}")
         # print the message from the server.
         pass
