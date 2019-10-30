@@ -1,5 +1,6 @@
 import hashlib
 import requests
+from time import time
 
 import sys
 import json
@@ -13,7 +14,15 @@ def proof_of_work(block):
     in an effort to find a number that is a valid proof
     :return: A valid proof for the provided block
     """
-    pass
+    block_string = json.dumps(block, sort_keys=True).encode()
+    proof = 0
+    print(f'starting proof of work at time: {time()}')
+    while not valid_proof(block_string, proof):
+        proof += 1
+    guess = f'{block_string}{proof}'.encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+    print(f'finished proof: {proof} at time: {time()}, {guess}')
+    return proof
 
 
 def valid_proof(block_string, proof):
@@ -27,7 +36,10 @@ def valid_proof(block_string, proof):
     correct number of leading zeroes.
     :return: True if the resulting hash is a valid proof, False otherwise
     """
-    pass
+    guess = f'{block_string}{proof}'.encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+    # return True or False
+    return guess_hash[:6] == "000000"
 
 
 if __name__ == '__main__':
@@ -47,6 +59,7 @@ if __name__ == '__main__':
     while True:
         r = requests.get(url=node + "/last_block")
         # Handle non-json response
+        print(f"Requests: {r.json()}")
         try:
             data = r.json()
         except ValueError:
@@ -56,7 +69,7 @@ if __name__ == '__main__':
             break
 
         # TODO: Get the block from `data` and use it to look for a new proof
-        # new_proof = ???
+        new_proof = proof_of_work(data)
 
         # When found, POST it to the server {"proof": new_proof, "id": id}
         post_data = {"proof": new_proof, "id": id}
