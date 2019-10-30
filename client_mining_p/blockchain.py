@@ -115,18 +115,27 @@ def mine():
     # Run the proof of work algorithm to get the next proof
     else:
         proof = data['proof']
-        print(f'got proof: {proof}')
+        block_string = json.dumps({'last_block': blockchain.last_block}, sort_keys=True).encode()
+        print(f'Block-string: {block_string}, proof: {proof}')
+        print("\n" + str(blockchain.valid_proof(block_string, proof)) + "\n")
+        if blockchain.valid_proof(block_string, proof):
+            print(f'got proof: {proof}')
     # Forge the new Block by adding it to the chain with the proof
-    previous_hash = blockchain.hash(blockchain.last_block)
-    block = blockchain.new_block(proof, previous_hash)
-    response = {
-        'message': "New Block Forged",
-        'index': block['index'],
-        'transactions': block['transactions'],
-        'proof': block['proof'],
-        'previous_hash': block['previous_hash'],
-    }
-    return jsonify(response), 200
+            previous_hash = blockchain.hash(blockchain.last_block)
+            block = blockchain.new_block(proof, previous_hash)
+            response = {
+                'message': "New Block Forged",
+                'index': block['index'],
+                'transactions': block['transactions'],
+                'proof': block['proof'],
+                'previous_hash': block['previous_hash'],
+            }
+            return jsonify(response), 200
+        else: 
+          response = {
+        'message': "Error: proof did not check out"
+        }
+        return jsonify(response), 403
 @app.route('/chain', methods=['GET'])
 def full_chain():
     response = {

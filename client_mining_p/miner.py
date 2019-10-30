@@ -18,7 +18,7 @@ def proof_of_work(block):
     """
     block_string = json.dumps(block, sort_keys=True).encode()
     proof = 0
-    print(f'starting proof of work at time: {time()}')
+    print(f'starting proof of work at time: {time()}, block_string: {block_string}')
     while not valid_proof(block_string, proof):
         proof += 1
     guess = f'{block_string}{proof}'.encode()
