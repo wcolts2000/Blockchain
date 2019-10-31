@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import Moment from 'react-moment';
 
 export default function Display({chain, title, length, coins}) {
   
@@ -17,6 +18,7 @@ export default function Display({chain, title, length, coins}) {
                   <h4>Amount: {block.transactions[0].amount}</h4>
                   <h4>Sender: {block.transactions[0].sender}</h4>
                   <h4>Recipient: {block.transactions[0].recipient}</h4>
+                  <h6><Moment unix format="MM/DD/YYYY HH:mm">{block.timestamp}</Moment></h6>
                 </div>
               )
             }
