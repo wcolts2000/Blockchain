@@ -1,14 +1,26 @@
 import React from 'react'
 
-export default function Display({chain, title, length, filterChain}) {
+export default function Display({chain, title, length, coins}) {
   
 
     if(chain.length) {
 
       return (
-        <div>
+        <div className="list">
           <h3>Total Blocks: {length}</h3>
           <h3>{title}</h3>
+          <h3>Coins: {coins}</h3>
+          {chain.map(block => {
+            if (block.transactions[0]) {
+                return (
+                <div className="blockWrapper" key={block.previous_hash}>
+                  <h4>Amount: {block.transactions[0].amount}</h4>
+                  <h4>Sender: {block.transactions[0].sender}</h4>
+                  <h4>Recipient: {block.transactions[0].recipient}</h4>
+                </div>
+              )
+            }
+          })}
           <code>{JSON.stringify(chain)}</code>
         </div>
       )
