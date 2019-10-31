@@ -9,7 +9,7 @@ export default function Display({chain, title, length, coins}) {
         <div className="list">
           <h3>Total Blocks: {length}</h3>
           <h3>{title}</h3>
-          <h3>Coins: {coins}</h3>
+          {coins && <h3>Coins: {coins}</h3>}
           {chain.map(block => {
             if (block.transactions[0]) {
                 return (
